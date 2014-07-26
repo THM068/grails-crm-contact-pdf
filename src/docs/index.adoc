@@ -55,6 +55,16 @@ As a developer you just have to create an event listener that replies to the +ex
 and then listen for rendering events. Plugins or applications code can provide report layouts
 for any domain class in a simple and elegant way.
 
+== Report Layouts
+
+This section describes each report layout provided by the +crm-contact-pdf+ plugin.
+
+=== Contact List
+
+A simple contact/address list if portrait A4 format.
+
+image::simple-thumbnail.png[Contact List, role="thumb"]
+
 == Custom Report example
 
 The following code example shows how you could create a Grails Service that provides a new report layout (address list).
