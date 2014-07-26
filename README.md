@@ -1,0 +1,20 @@
+# GR8 CRM - Contact Management - Basic PDF Layouts
+
+CRM = [Customer Relationship Management](http://en.wikipedia.org/wiki/Customer_relationship_management)
+
+GR8 CRM is a set of [Grails Web Application Framework](http://www.grails.org/)
+plugins that makes it easy to develop web application with CRM functionality.
+With CRM we mean features like:
+
+- Contact Management
+- Task/Todo Lists
+- Project Management
+
+
+## Contact Management PDF Layouts for GR8 CRM
+This plugin provide report templates for GR8 CRM Contact Management.
+It depends on the **crm-contact** plugin for services and persistence.
+
+### Documentation
+
+Complete documentation for this plugin can be found at [gr8crm.github.io](http://gr8crm.github.io/plugins/crm-contact-pdf/)
