@@ -32,11 +32,71 @@ that focus on one specific domain, for example *contact*, *project* or *document
 
 == Contact Management Reports Plugin
 
-The +crm-contact-pdf+ plugin is a companion plugin to plugins +crm-contact+ and +crm-contact-ui+. It provides PDF reports for contact management.
+The +crm-contact-pdf+ plugin is a companion plugin to plugins +crm-contact+ and +crm-contact-ui+.
+It provides PDF reports for contact management.
+
+Printing and exporting data in a {gr8crm} application is event based.
+When a user decides to export or print data a layout selection page is displayed.
+But before this page is displayed the application event +exportLayout+ is sent.
+The namespace for this event is the (property) name of the domain class that wants to be exported/printed.
+For example: If a user wants to export or print contacts using the +crm-contact-ui+ plugin the event that is
+sent is +namespace=crmContact+, +topics=exportLayout+.
+
+Application or plugin code that supports exporting the data type specified by namespace replies to the event with
+metadata about supported layouts. The layout selection page aggregates all replies and render a list of
+layouts that the user can pick from.
+
+Once the user has selected a layout a new event is sent. The event payload is the metadata that was replied in the first event.
+The listener that listens to this event renders the report and return a temporary file with report/export output.
+This temporary file is then sent to the user's browser.
+
+This event based approach makes it easy to add more layouts with zero configuration.
+As a developer you just have to create an event listener that replies to the +exportLayout+ event
+and then listen for rendering events. Plugins or applications code can provide report layouts
+for any domain class in a simple and elegant way.
+
+== Custom Report example
+
+The following code example shows how you could create a Grails Service that provides a new report layout (address list).
+
+[source,groovy]
+.MyReportService.groovy
+----
+class MyReportService {
+
+    def grailsLinkGenerator
+    def pdfRenderingService
+
+    @Listener(namespace = "crmContact", topic = "exportLayout")
+    def exportLayout(data) {
+        return [name: 'Address List', description: 'Simple address list in A4 portrait',
+                thumbnail: grailsLinkGenerator.resource(dir: 'images', file: 'address-thumbnail.png'), // <1>
+                contentType: 'application/pdf', namespace: 'crmContact', topic: 'print-simple']
+    }
+
+    @Listener(namespace = "crmContact", topic = "print-simple") // <2>
+    def print(params) {
+        def tempFile = File.createTempFile("crm", ".pdf")
+        tempFile.deleteOnExit()
+
+        // Render PDF report to a temporary file
+        tempFile.withOutputStream { outputStream ->
+            pdfRenderingService.render(template: "addresslist", plugin: "my-reports", controller: "crmContact",
+                    model: [result: result], outputStream) // <3>
+        }
+        [file: tempFile, filename: 'Address List', contentType: 'application/pdf']
+    }
+}
+----
+<1> A thumbnail image of the report layout is stored as *web-app/images/address-thumbnail.png*.
+<2> Namespace and topic must match what was sent in the *exportLayout* reply above.
+<3> The report template is *grails-app/views/crmContact/_addresslist.gsp* in plugin *my-reports*.
 
 == License
 
 {license}
+
+NOTE: This plugin has a runtime dependency on iText version 2.1.0 which is released under MPL & LGPL licenses.
 
 == Source Code
 
