@@ -23,7 +23,7 @@ grails.project.dependency.resolution = {
               ":rest-client-builder:1.0.3") {
             export = false
         }
-        compile ":crm-contact:2.0.0"
+        compile ":crm-contact:2.0.2"
         compile(":rendering:0.4.4")
 
     }
