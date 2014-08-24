@@ -38,14 +38,14 @@ class CrmContactPdfPrintService {
     @Listener(namespace = "crmContact", topic = "exportLayout")
     def exportLayout(data) {
         return [name: 'Adresslista', description: 'Enkel adresslista i stående A4 format',
-                thumbnail: grailsLinkGenerator.resource(dir: 'images', file: 'simple-thumbnail.png'),
-                contentType: 'application/pdf', namespace: 'crmContact', topic: 'print-simple']
+                thumbnail: grailsLinkGenerator.resource(dir: 'images', file: 'contact-list-thumbnail.png'),
+                contentType: 'application/pdf', namespace: 'crmContact', topic: 'print-contact-list']
     }
 
-    @Listener(namespace = "crmContact", topic = "print-simple")
+    @Listener(namespace = "crmContact", topic = "print-contact-list")
     def print(params) {
         if (!params.tenant) {
-            log.error("Parameter [tenant] missing in event [print-simple]: $params")
+            log.error("Parameter [tenant] missing in event [print-contact-list]: $params")
             throw new IllegalArgumentException("Mandatory parameter [tenant] was not specified in the event")
         }
         if (!params.sort) {
